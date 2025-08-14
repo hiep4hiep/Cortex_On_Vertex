@@ -9,6 +9,7 @@ from datetime import datetime
 import asyncio
 import vertexai
 from vertexai import agent_engines
+from vertexai.preview import reasoning_engines
 from google.adk.sessions import VertexAiSessionService
 from dotenv import load_dotenv
 
@@ -18,6 +19,7 @@ from google.cloud import aiplatform
 from google.oauth2 import service_account
 from google.auth import default
 import vertexai
+
 
 
 # Configure logging
@@ -62,11 +64,10 @@ def chat():
         
         session_id = data.get('session_id')
         if not session_id:
-            session = asyncio.run(session_service.create_session(
-                app_name=AGENT_ENGINE_ID,
-                user_id="web_app",
-            ))
-            session_id = session.id
+            session = agent_engine.create_session(
+                user_id="web_app"
+            )
+            session_id = session.get('id')
         logger.info(f"Received chat message: {message[:100]}...")
         
         # Query the Vertex AI reasoning engine
@@ -76,14 +77,16 @@ def chat():
             session_id=session_id
         ):
             result = response
-
+        logger.info(f"Response received: {result}")
         if result.get("content").get("parts")[0].get("text"):
+            logger.info(f"Returning response...")
             return jsonify({
                 "response": result.get("content").get("parts")[0].get("text"),
                 "session_id": session_id,
                 "timestamp": result["timestamp"]
             })
         else:
+            logger.info(f"Returning error {result['error']}")
             return jsonify({
                 "error": result["error"],
                 "timestamp": result["timestamp"]

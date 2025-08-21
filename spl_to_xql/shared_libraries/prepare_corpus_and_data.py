@@ -123,9 +123,9 @@ def main():
   corpus = create_or_get_corpus()
 
     # Upload your local PDF to the corpus
-  local_file_path = "/home/hiepn/adk-samples/python/agents/RAG/rag/shared_libraries/Data_Model_Guide.pdf" # Set the correct path
-  display_name = "DM_Schema.pdf" # Set the desired display name
-  description = "Explain the Data Model schema to use in XQL Query" # Set the description
+  local_file_path = "/home/hiepn/adk-samples/python/agents/xsiam-spl-to-xql/spl_to_xql/shared_libraries/SPL_to_XQL.pdf" # Set the correct path
+  display_name = "SPL_to_XQL.pdf" # Set the desired display name
+  description = "Examples of Splunk SPL query to XQL conversion" # Set the description
 
   # Ensure the file exists before uploading
   if os.path.exists(local_file_path):
